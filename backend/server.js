@@ -1,12 +1,23 @@
+require('dotenv').config()
 const express = require('express')
 const axios = require('axios')
 const cors = require('cors')
+const mongoose = require('mongoose')
 
 const app = express();
 const PORT = 5001
 
 app.use(cors())
 app.use(express.json());
+
+app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
+})
+
+mongoose.connect(process.env.ATLAS_URI)
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.error('MongoDB connection error:', err))
+
 
 //fetches realtime crypto data from CoinGecko
 app.get('/api/crypto', async (req, res) => {
@@ -21,6 +32,18 @@ app.get('/api/crypto', async (req, res) => {
     }
 })
 
-app.listen(PORT, () => {
-    console.log(`Backend server running on http://localhost:${PORT}`);
+//test mongo connection
+app.get('/api/test', async (req,res) => {
+    try {
+        const db = mongoose.connection.db;
+        const result = await db.collection('test').insertOne({message: "test", date: new Date()});
+
+        res.json({
+            status: "success",
+            insertedId: result.insertedId,
+            atlas: true
+        });
+    }catch (error) {
+        res.status(500).json({error: error.message});
+    }
 })
