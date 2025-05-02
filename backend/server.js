@@ -3,12 +3,15 @@ const express = require('express')
 const axios = require('axios')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const authRoutes = require('./routes/auth')
 
 const app = express();
 const PORT = 5001
 
 app.use(cors())
 app.use(express.json());
+app.use('/api/auth', authRoutes)
+
 
 app.listen(PORT, () => {
     console.log(`Backend server running on http://localhost:${PORT}`);
