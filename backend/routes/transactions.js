@@ -63,4 +63,56 @@ router.get('/:username', async (req, res) => {
     }
 })
 
+console.log('Sell route registered')
+router.post('/sell', async (req, res) => {
+    console.log("selling")
+    try {
+        const {username, cryptoId, amount} = req.body
+        console.log("searching for: ", username)
+
+        const user = await User.findOne({username})
+        console.log("user found: ", username)
+
+        if (!user) {
+            console.log("user of this name not found: ", username)
+            return res.status(400).json({error: "User not found"})
+        }
+
+        let portfolioItem = await Portfolio.findOne({
+            userId: user._id, cryptoId    
+        })
+
+        if (!portfolioItem || portfolioItem.amount < amount) {
+            return res.status(400).json({error: "Insufficient amount to sell"})
+        }
+
+        const priceResponse = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
+        const currentPrice = priceResponse.data[cryptoId].usd
+        const totalValue = amount * currentPrice
+
+        user.balance += totalValue;
+        portfolioItem.amount -= amount;
+        
+        if (portfolioItem.amount <= 0) {
+            await Portfolio.deleteOne({ _id: portfolioItem._id })
+        } else {
+            await portfolioItem.save()
+        }
+
+        await user.save()
+
+        res.json({
+            success: true,
+            message: "Sale completed",
+            amountSold: amount,
+            pricePerCoin: currentPrice,
+            totalValue,
+            newBalance: user.balance
+        })
+
+    } catch (error) {
+        res.status(500).json({error: "Sale failed", details: error.message})
+    }
+})
+
 module.exports = router;
