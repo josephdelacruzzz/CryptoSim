@@ -4,6 +4,7 @@ const axios = require('axios')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const authRoutes = require('./routes/auth')
+const transactionRoutes = require('./routes/transactions')
 
 const app = express();
 const PORT = 5001
@@ -11,6 +12,7 @@ const PORT = 5001
 app.use(cors())
 app.use(express.json());
 app.use('/api/auth', authRoutes)
+app.use('/api/transactions', transactionRoutes)
 
 
 app.listen(PORT, () => {
@@ -28,7 +30,15 @@ app.get('/api/crypto', async (req, res) => {
         const response = await axios.get (
             'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=1&sparkline=false'
         );
-        res.json(response.data);
+
+        const crypto = response.data.map(coin => ({
+            id: coin.id,
+            name: coin.name,
+            current_price: coin.current_price,
+            market_cap: coin.market_cap,
+            price_change_percentage_24h: coin.price_change_percentage_24h
+        }))
+        res.json(crypto);
     } catch (error) {
         console.error('Error receiving data from CoinGecko:', error.message);
         res.status(500).json({error: 'Failed to receive data from CoinGecko'})
