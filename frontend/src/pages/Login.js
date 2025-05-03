@@ -2,7 +2,7 @@ import { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-function Login() {
+function Login({setLoggedInUser}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
@@ -10,11 +10,22 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault()
         axios.post('http://localhost:5001/api/auth/login', {username, password})
-        .then(response => {
-            alert('Login succesful!')
-            navigate('/profile')
-        })
-        .catch(error => alert("Login failed: " + error.response?.data?.error))
+            .then(response => {
+                console.log('response:', response.data)
+                if (response.data.success) {
+                    alert('Login succesful!')
+                    localStorage.setItem('token', 'randomToken')
+                    localStorage.setItem('username', username)
+                    setLoggedInUser(response.data.user)
+                    navigate('/')
+                } else {
+                    alert("Login failed: " + (response.data.error || "Unknown error"))
+                }
+            })
+            .catch(error => {
+                console.error('why wont this work', error)
+                alert("Login failed: " + (error.response?.data?.error || "server error"))
+            })
     }
 
     return (

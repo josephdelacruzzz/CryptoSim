@@ -7,7 +7,7 @@ function Profile() {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`http://localhost:50001/api/transactions/${username}`)
+            const response = await axios.get(`http://localhost:5001/api/transactions/${username}`)
             setUserData(response.data)
         } catch (error) {
             alert('Error fetching user data: ' + (error.response?.data?.error || 'User not found'))

@@ -47,14 +47,17 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({username})
 
         if (!user || user.password !== password) {
-            return res.status(401).json({error: "Wrong username/password"})
+            return res.status(401).json({success: false, error: "Wrong username or password"})
         }
 
         //done to test thru postman
         res.json({
-            message: "Login success",
-            userId: user._id,
-            balance: user.balance
+            success: true,
+            user: {
+                username: user.username,
+                balance: user.balance,
+                _id: user._id
+            }
         })
     } catch (error) {
         res.status(500).json({error: "Server error"})

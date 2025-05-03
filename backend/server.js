@@ -5,6 +5,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const authRoutes = require('./routes/auth')
 const transactionRoutes = require('./routes/transactions')
+const User = require('./models/User')
 
 const app = express();
 const PORT = 5001
@@ -58,5 +59,18 @@ app.get('/api/test', async (req,res) => {
         });
     }catch (error) {
         res.status(500).json({error: error.message});
+    }
+})
+
+app.get('/api/auth/me', async (req,res) => {
+    try {
+        const {username} =req.query
+        const user = await User.findOne({username}).select('-password')
+        if (!user) 
+            return res.status(404).json({error: "user not found"})
+        res.json(user)
+    } catch (error) {
+        console.error('Auth error:', error)
+        res.status(500).send("server error")
     }
 })

@@ -111,3 +111,63 @@ input, button {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.modalContent h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.modalInputGroup {
+  margin: 1rem 0;
+}
+
+.modalInputGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.modalInputGroup input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modalContent input[type="number"] {
+  margin: 10px 0;
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
