@@ -40,7 +40,6 @@ function Home({loggedInUser, setLoggedInUser}) {
           navigate('/login')
           return;
         }
-
         
         setSelectedCrypto(crypto)
         setAmount(1);
@@ -59,17 +58,27 @@ function Home({loggedInUser, setLoggedInUser}) {
             return
         }
 
+        const totalCost = parseFloat(amount) * selectedCrypto.current_price;
+        if (userBalance < totalCost) {
+            alert('Insufficient funds');
+            return;
+       }
+
         try {
           await axios.post('http://localhost:5001/api/transactions/buy',
             { username: username, cryptoId: selectedCrypto.id, amount: parseFloat(amount)},
           );
           alert(`Successfully purchased ${amount} ${selectedCrypto.name.toUpperCase()}!`);
-          setSelectedCrypto(null);
-          setAmount('');
+          setSelectedCrypto(null)
+          setAmount('')
+          fetchUserBalance()
         } catch (error) {
           alert('Purchase failed: ' + (error.response?.data?.error || error.message));
         }
     };
+
+    const totalCost = amount && selectedCrypto?.current_price ? parseFloat(amount) * selectedCrypto.current_price : 0
+
 
     return (
         <div className="homeContainer">
@@ -78,7 +87,7 @@ function Home({loggedInUser, setLoggedInUser}) {
             {loggedInUser && (
                 <div className="userInfo"> 
                     <div className="welcome"> Welcome, {loggedInUser.username}</div>
-                    <div className="balance">Available Balance: <span>${userBalance.toFixed(2)}</span></div>
+                    <div className="balance">Available Balance: <span>${userBalance.toFixed(4)}</span></div>
                 </div>
             )}
 
@@ -113,10 +122,11 @@ function Home({loggedInUser, setLoggedInUser}) {
                     
                         <div className="modalInputGroup">
                             <label>Amount to buy: </label>
-                            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} min="0.0001" step="0.0001"/>
+                            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} min="0.00001" step="0.00001"/>
                         </div>
+                        <p>Total Cost: ${totalCost.toFixed(4)}</p>
 
-                        <div clasName="modalButtons">
+                        <div className="modalButtons">
                             <button onClick={confirmPurchase}>Confirm</button>
                             <button onClick={() => setSelectedCrypto(null)}>Cancel</button>
                         </div>

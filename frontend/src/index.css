@@ -112,7 +112,6 @@ input, button {
   background-color: #0f55bd;  
 }
 
-
 .tableCell {
   flex: 1;
   padding: 0 10px;
@@ -149,50 +148,54 @@ input, button {
 }
 
 .modalContent {
-  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #0f55bd;
   padding: 20px;
   border-radius: 8px;
   width: 300px;
+  color:#f8f8f8;
+  font-weight: bold;
 }
 
 .modalContent h3 {
   margin-top: 0;
-  color: #333;
+  color: #ffffff;
 }
 
 .modalInputGroup {
-  margin: 16px 0;
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  margin: 10px 0; 
+  margin-bottom: 20px; 
 }
 
 .modalInputGroup label {
-  display: block;
-  margin-bottom: 8px;
-  color: rgb(215, 237, 14);
+  color: #f8f8f8;
 }
 
 .modalInputGroup input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
+  width: 100px;
   border-radius: 4px;
-}
-
-.modalContent input[type="number"] {
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 0; 
+  border: white;
 }
 
 .modalButtons {
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-top: 15px;
-  padding: 8px 16px;
-  border: none;
+  align-self: center;
+}
+
+.modalButtons button {
+  padding: 8px 16px; 
+  border: none; 
   border-radius: 4px;
-  cursor: pointer;
+  cursor: pointer; 
 }
 
 /*portfolio*/

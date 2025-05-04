@@ -7,6 +7,7 @@ function MyPortfolio({loggedInUser}) {
     const [balance, setBalance] = useState(0)
     const [selectedCrypto, setSelectedCrypto] = useState(null)
     const [sellAmount, setSellAmount] = useState('')
+    const [currentPrice, setCurrentPrice] = useState(null);
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -16,6 +17,24 @@ function MyPortfolio({loggedInUser}) {
         }
         fetchPortfolio()
     }, [loggedInUser, navigate])
+
+    useEffect(() => {
+        const fetchCurrentPrice = async (cryptoId) => {
+            try {
+                const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`);
+                setCurrentPrice(response.data[cryptoId]?.usd || null);
+            } catch (error) {
+                console.error('Error fetching current price:', error);
+                setCurrentPrice(null); 
+            }
+        };
+
+        if (selectedCrypto) {
+            fetchCurrentPrice(selectedCrypto.cryptoId);
+        } else {
+            setCurrentPrice(null);
+        }
+    }, [selectedCrypto]); 
 
     const fetchPortfolio = async () => {
         try {
@@ -44,6 +63,15 @@ function MyPortfolio({loggedInUser}) {
             return
         }
 
+        if (parseFloat(sellAmount) > selectedCrypto.amount) {
+            alert('Amount to sell exceeds available amount');
+            return;
+        }
+       if (currentPrice === null) {
+            alert('Could not fetch current price. Please try again.');
+            return;
+       }
+
         try {
             await axios.post('http://localhost:5001/api/transactions/sell', {
                 username: loggedInUser.username,
@@ -59,6 +87,9 @@ function MyPortfolio({loggedInUser}) {
         }
     }
 
+    const potentialReturn = (sellAmount && currentPrice !== null) ? parseFloat(sellAmount) * currentPrice : 0;
+
+
     if (!loggedInUser) {
         return null
     }
@@ -68,7 +99,7 @@ function MyPortfolio({loggedInUser}) {
             <h1>My Portfolio</h1>
             
             <div className="accountSummary">
-                <h2 className="balance">Available Balance: <span>${balance.toFixed(2)}</span></h2>
+                <h2 className="balance">Available Balance: <span>${balance.toFixed(4)}</span></h2>
             </div>
 
             <div className="holdings">
@@ -86,7 +117,7 @@ function MyPortfolio({loggedInUser}) {
                         <div className="tableRow" key={index}>
                             <div className="tableCell">{item.cryptoId}</div>
                             <div className="tableCell">{item.amount.toFixed(4)}</div>
-                            <div className="tableCell">${item.avgBuyPrice.toFixed(2)}</div>
+                            <div className="tableCell">${item.avgBuyPrice.toFixed(4)}</div>
                             <div className="tableCell actionCell">
                                 <button onClick={() => handleSellClick(item)} className="sellButton">Sell</button>
                             </div>
@@ -105,10 +136,12 @@ function MyPortfolio({loggedInUser}) {
                         <h3>Sell {selectedCrypto.cryptoId}</h3>
                         <p>Available: {selectedCrypto.amount.toFixed(4)}</p>
                         
-                        <div className="formGroup">
+                        <div className="modalInputGroup">
                             <label>Amount to Sell:</label>
-                            <input type="number" value={sellAmount} onChange={(e) => setSellAmount(e.target.value)} min="0.0001" max={selectedCrypto.amount} step="0.0001" />
+                            <input type="number" value={sellAmount} onChange={(e) => setSellAmount(e.target.value)} min="0.00001" max={selectedCrypto.amount} step="0.00001" />
                         </div>
+
+                        <p>Potential Return: ${potentialReturn.toFixed(4)}</p>
                         
                         <div className="modalButtons">
                             <button onClick={confirmSell} className="confirmButton"> Confirm </button>

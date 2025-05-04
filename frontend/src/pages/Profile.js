@@ -37,7 +37,7 @@ function Profile() {
                             <div className="tableRow" key={index}>
                                 <div className="tableCell">{item.cryptoId}</div>
                                 <div className="tableCell">{item.amount.toFixed(4)}</div>
-                                <div className="tableCell">${item.avgBuyPrice.toFixed(2)}</div>
+                                <div className="tableCell">${item.avgBuyPrice.toFixed(4)}</div>
                             </div>
                         ))}
                     </div>

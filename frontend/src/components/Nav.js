@@ -11,6 +11,7 @@ function Nav( {loggedInUser, setLoggedInUser}) {
     return (
         <nav>
             <div className="navLeft">
+                <div>CRYPTOSIM</div>
                 <Link to="/">Home</Link>
                 <Link to="/profile">User Search</Link>
             </div>
