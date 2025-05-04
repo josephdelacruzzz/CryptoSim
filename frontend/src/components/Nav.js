@@ -24,6 +24,7 @@ function Nav( {loggedInUser, setLoggedInUser}) {
                     </>
                 ) : (
                     <>
+                        <Link to="/myPortfolio">My Portfolio</Link>
                         <Link to="#" onClick={handleLogout}>Logout</Link>
                     </>
                 )}

@@ -58,7 +58,7 @@ function Home({loggedInUser, setLoggedInUser}) {
             <h1 className="marketTitle"> CryptoSim </h1>
 
             {loggedInUser && (
-                <div className="welcome"> Welcome back, {loggedInUser.username}</div>
+                <div className="welcome"> Welcome, {loggedInUser.username}</div>
             )}
 
             {loggedInUser && ( <div> Logged in as: <strong>{loggedInUser.username}</strong></div>)}
