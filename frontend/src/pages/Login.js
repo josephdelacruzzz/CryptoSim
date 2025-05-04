@@ -15,7 +15,8 @@ function Login({setLoggedInUser}) {
                 console.log('response:', response.data)
                 if (response.data.success) {
                     alert('Login succesful!')
-                    localStorage.setItem('currentUser', JSON.stringify({username: response.data.user.username, token: 'randomToken'}))
+                    localStorage.setItem('username', response.data.user.username)
+                    localStorage.setItem('userData', JSON.stringify(response.data.user))
                     setLoggedInUser(response.data.user)
                     navigate('/')
                 } else {

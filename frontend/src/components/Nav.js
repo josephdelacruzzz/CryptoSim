@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 
 function Nav( {loggedInUser, setLoggedInUser}) {
     const handleLogout = () => {
-        localStorage.removeItem('currentUser')
+        localStorage.removeItem('username')
+        localStorage.removeItem('userData')
         setLoggedInUser(null)
         window.location.href = '/'
     }

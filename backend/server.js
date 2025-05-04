@@ -25,12 +25,20 @@ mongoose.connect(process.env.ATLAS_URI)
     .catch(err => console.error('MongoDB connection error:', err))
 
 
+let cryptoCache = null
+let lastFetchTime = 0
+
 //fetches realtime crypto data from CoinGecko
 app.get('/api/crypto', async (req, res) => {
     try {
-        const response = await axios.get (
-            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=1&sparkline=false'
-        );
+
+        if (cryptoCache && Date.now() - lastFetchTime < 60000) {
+            return res.json(cryptoCache)
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        const response = await axios.get ('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=1&sparkline=false');
 
         const crypto = response.data.map(coin => ({
             id: coin.id,
@@ -39,6 +47,10 @@ app.get('/api/crypto', async (req, res) => {
             market_cap: coin.market_cap,
             price_change_percentage_24h: coin.price_change_percentage_24h
         }))
+
+        cryptoCache = crypto
+        lastFetchTime = Date.now()
+        
         res.json(crypto);
     } catch (error) {
         console.error('Error receiving data from CoinGecko:', error.message);

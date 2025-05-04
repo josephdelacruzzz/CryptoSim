@@ -10,15 +10,18 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(null)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser')
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser)
-        setLoggedInUser({ username: user.username })
-      } catch (e) {
-        localStorage.removeItem('currentUser')
+    const username = localStorage.getItem('username');
+      const userData = localStorage.getItem('userData');
+      
+      if (username && userData) {
+          try {
+              setLoggedInUser(JSON.parse(userData));
+          } catch {
+              localStorage.removeItem('username');
+              localStorage.removeItem('userData');
+              // setLoggedInUser(null)
+          }
       }
-    }
   }, [])
 
   return (

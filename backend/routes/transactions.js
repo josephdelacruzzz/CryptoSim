@@ -8,6 +8,8 @@ router.post('/buy', async (req, res) => {
     try {
         const {username, cryptoId, amount } = req.body;
 
+        console.log('Purchase attempted by:', username)
+
         const user = await User.findOne({username})
         if (!user) {
             return res.status(400).json({error: "User not found"})

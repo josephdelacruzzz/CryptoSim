@@ -51,6 +51,16 @@ input, button {
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+.welcome {
+   color: #f8f8f8;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(15, 52, 96, 0.7); 
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: bold;
+}
+
 .marketTitle {
   color: #fafafa;
   margin-bottom: 20px;

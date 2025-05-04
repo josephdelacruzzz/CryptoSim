@@ -16,9 +16,6 @@ function Home({loggedInUser, setLoggedInUser}) {
     }, [])
 
     const handleBuyClick = (crypto) => {
-        console.log('1. Buy button clicked for:', crypto.id)
-        console.log('2. Current loggedInUser:', loggedInUser)
-        console.log('3. localStorage username:', localStorage.getItem('username'))
 
         if (!loggedInUser) {
           alert('Please login first')
@@ -26,10 +23,9 @@ function Home({loggedInUser, setLoggedInUser}) {
           return;
         }
 
-        console.log('4. Setting selected crypto:', crypto)
+        
         setSelectedCrypto(crypto)
         setAmount(1);
-        console.log('5. Selected crypto after set:', selectedCrypto)
     };
     
     const confirmPurchase = async () => {
@@ -38,16 +34,16 @@ function Home({loggedInUser, setLoggedInUser}) {
           return;
         }
 
-        const token = localStorage.getItem('token')
-        if (!token || !loggedInUser) {
-            alert('Please Login.')
+        const username = localStorage.getItem('username')
+        if (!username) {
+            alert('Session expired. Please login again.')
+            navigate('/login')
             return
         }
-    
+
         try {
           await axios.post('http://localhost:5001/api/transactions/buy',
-            { username: loggedInUser.username, cryptoId: selectedCrypto.id, amount: parseFloat(amount)},
-            {headers: { 'x-auth-token': localStorage.getItem('token') }}
+            { username: username, cryptoId: selectedCrypto.id, amount: parseFloat(amount)},
           );
           alert(`Successfully purchased ${amount} ${selectedCrypto.name.toUpperCase()}!`);
           setSelectedCrypto(null);
@@ -61,13 +57,8 @@ function Home({loggedInUser, setLoggedInUser}) {
         <div className="homeContainer">
             <h1 className="marketTitle"> CryptoSim </h1>
 
-            {loggedInUser ? (
-                <div > Welcome back, <strong>{loggedInUser.username}</strong>
-                </div>
-            ) : (
-                <div>
-                    Please <a href="/login" >login</a> or <a href="/register">register</a> to trade.
-                </div>
+            {loggedInUser && (
+                <div className="welcome"> Welcome back, {loggedInUser.username}</div>
             )}
 
             {loggedInUser && ( <div> Logged in as: <strong>{loggedInUser.username}</strong></div>)}
