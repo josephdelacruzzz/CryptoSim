@@ -12,7 +12,7 @@ function Nav( {loggedInUser, setLoggedInUser}) {
         <nav>
             <div className="navLeft">
                 <Link to="/">Home</Link>
-                <Link to="/profile">Profile Searcher</Link>
+                <Link to="/profile">User Search</Link>
             </div>
 
             <div className="navRight">

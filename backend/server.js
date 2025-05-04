@@ -38,7 +38,7 @@ app.get('/api/crypto', async (req, res) => {
 
         await new Promise(resolve => setTimeout(resolve, 1000))
 
-        const response = await axios.get ('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=1&sparkline=false');
+        const response = await axios.get ('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false');
 
         const crypto = response.data.map(coin => ({
             id: coin.id,
@@ -50,7 +50,7 @@ app.get('/api/crypto', async (req, res) => {
 
         cryptoCache = crypto
         lastFetchTime = Date.now()
-        
+
         res.json(crypto);
     } catch (error) {
         console.error('Error receiving data from CoinGecko:', error.message);

@@ -15,24 +15,36 @@ function Profile() {
     }
 
     return (
-        <div>
-            <h1>Profile Searcher</h1>
-            <div>
+        <div className="profileContainer">
+            <h1>User Search</h1>
+            <div className="searchContainer">
                 <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder = "Enter username"/>
                 <button onClick={handleSearch}>Search</button>
             </div>
 
             {userData && (
-                <div>
-                    <h2>Portfolio</h2>
-                    <ul>
-                        {userData.map((item,index) => (
-                            <li key={index}>
-                                {item.cryptoId}: {item.amount} coins
-                            </li>
+                <div className="userPortfolio">
+                <h2>{username}'s Portfolio</h2>
+                {userData.length > 0 ? (
+                    <div className="portfolioTable">
+                        <div className="tableHeader">
+                            <div className="headerCell">Coin</div>
+                            <div className="headerCell">Amount</div>
+                            <div className="headerCell">Avg Buy Price</div>
+                        </div>
+                        
+                        {userData.map((item, index) => (
+                            <div className="tableRow" key={index}>
+                                <div className="tableCell">{item.cryptoId}</div>
+                                <div className="tableCell">{item.amount.toFixed(4)}</div>
+                                <div className="tableCell">${item.avgBuyPrice.toFixed(2)}</div>
+                            </div>
                         ))}
-                    </ul>
-                </div>
+                    </div>
+                ) : (
+                    <p className="noHoldings">No holdings found for this user.</p>
+                )}
+            </div>
             )}
         </div>
     )

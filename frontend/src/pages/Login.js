@@ -30,7 +30,7 @@ function Login({setLoggedInUser}) {
     }
 
     return (
-        <div>
+        <div className="auth">
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"/>

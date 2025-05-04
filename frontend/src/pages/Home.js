@@ -6,14 +6,32 @@ function Home({loggedInUser, setLoggedInUser}) {
     const [cryptos, setCryptos] = useState([])
     const [selectedCrypto, setSelectedCrypto] = useState(null);
     const [amount, setAmount] = useState('');
+    const [userBalance, setUserBalance] = useState(0)
+
     const navigate = useNavigate()
 
     useEffect(() => {
         axios.get('http://localhost:5001/api/crypto')
         .then(response => setCryptos(response.data))
         .catch(error => console.error('Error:', error))
+
+        if (loggedInUser) {
+            fetchUserBalance()
+        }
             
-    }, [])
+    }, [loggedInUser])
+
+    const fetchUserBalance = async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:5001/api/auth/me?username=${loggedInUser.username}`
+            );
+            setUserBalance(response.data.balance || 0);
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+        }
+    };
+
 
     const handleBuyClick = (crypto) => {
 
@@ -58,7 +76,10 @@ function Home({loggedInUser, setLoggedInUser}) {
             <h1 className="marketTitle"> CryptoSim </h1>
 
             {loggedInUser && (
-                <div className="welcome"> Welcome, {loggedInUser.username}</div>
+                <div className="userInfo"> 
+                    <div className="welcome"> Welcome, {loggedInUser.username}</div>
+                    <div className="balance">Available Balance: <span>${userBalance.toFixed(2)}</span></div>
+                </div>
             )}
 
             {loggedInUser && ( <div> Logged in as: <strong>{loggedInUser.username}</strong></div>)}

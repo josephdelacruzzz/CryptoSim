@@ -65,14 +65,14 @@ function MyPortfolio({loggedInUser}) {
 
     return (
         <div className="myPortfolioContainer">
-            <h1>{loggedInUser.username}'s Portfolio</h1>
+            <h1>My Portfolio</h1>
             
             <div className="accountSummary">
                 <h2 className="balance">Available Balance: <span>${balance.toFixed(2)}</span></h2>
             </div>
 
             <div className="holdings">
-                <h3>Your Holdings</h3>
+                <h3>My Holdings</h3>
                 {portfolio.length > 0 ? (
                     <div className="portfolioTable">
                         <div className="tableHeader">
@@ -100,8 +100,8 @@ function MyPortfolio({loggedInUser}) {
 
             {/* Sell Modal */}
             {selectedCrypto && (
-                <div className="sellModalOverlay">
-                    <div className="sellModal">
+                <div className="modalOverlay">
+                    <div className="modalContent">
                         <h3>Sell {selectedCrypto.cryptoId}</h3>
                         <p>Available: {selectedCrypto.amount.toFixed(4)}</p>
                         
@@ -111,7 +111,7 @@ function MyPortfolio({loggedInUser}) {
                         </div>
                         
                         <div className="modalButtons">
-                            <button onClick={confirmSell} className="confirmButton"> Confirm Sell </button>
+                            <button onClick={confirmSell} className="confirmButton"> Confirm </button>
                             <button onClick={() => setSelectedCrypto(null)} className="cancelButton"> Cancel</button>
                         </div>
                     </div>
