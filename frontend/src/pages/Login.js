@@ -9,13 +9,13 @@ function Login({setLoggedInUser}) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        localStorage.clear()
         axios.post('http://localhost:5001/api/auth/login', {username, password})
             .then(response => {
                 console.log('response:', response.data)
                 if (response.data.success) {
                     alert('Login succesful!')
-                    localStorage.setItem('token', 'randomToken')
-                    localStorage.setItem('username', username)
+                    localStorage.setItem('currentUser', JSON.stringify({username: response.data.user.username, token: 'randomToken'}))
                     setLoggedInUser(response.data.user)
                     navigate('/')
                 } else {

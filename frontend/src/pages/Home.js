@@ -1,28 +1,19 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 function Home({loggedInUser, setLoggedInUser}) {
     const [cryptos, setCryptos] = useState([])
-    // const [loggedInUser, setLoggedInUser] = useState(null);
     const [selectedCrypto, setSelectedCrypto] = useState(null);
     const [amount, setAmount] = useState('');
+    const navigate = useNavigate()
 
     useEffect(() => {
         axios.get('http://localhost:5001/api/crypto')
         .then(response => setCryptos(response.data))
         .catch(error => console.error('Error:', error))
-
-        const checkAuth = () => {
-            const storedUsername = localStorage.getItem('username')
-            const storedToken = localStorage.getItem('token')
-            if (storedUsername && storedToken) {
-                setLoggedInUser({username: storedUsername})
-            }
-        }
-
-        checkAuth()
-                
-    }, [setLoggedInUser])
+            
+    }, [])
 
     const handleBuyClick = (crypto) => {
         console.log('1. Buy button clicked for:', crypto.id)
@@ -31,6 +22,7 @@ function Home({loggedInUser, setLoggedInUser}) {
 
         if (!loggedInUser) {
           alert('Please login first')
+          navigate('/login')
           return;
         }
 
@@ -67,24 +59,30 @@ function Home({loggedInUser, setLoggedInUser}) {
 
     return (
         <div className="homeContainer">
-            <h1 className="marketTitle"> Crypto Market </h1>
+            <h1 className="marketTitle"> CryptoSim </h1>
 
-            {loggedInUser && ( <div style={{ marginBottom: '1rem' }}> Logged in as: <strong>{loggedInUser.username}</strong></div>)}
+            {loggedInUser ? (
+                <div > Welcome back, <strong>{loggedInUser.username}</strong>
+                </div>
+            ) : (
+                <div>
+                    Please <a href="/login" >login</a> or <a href="/register">register</a> to trade.
+                </div>
+            )}
+
+            {loggedInUser && ( <div> Logged in as: <strong>{loggedInUser.username}</strong></div>)}
             <div className="cryptoTable">
                 <div className="tableHeader">
                     <div className="headerCell">Coin</div>
                     <div className="headerCell">Price</div>
                     <div className="headerCell">Market Cap</div>
                     <div className="headerCell">24h Change</div>
-                    <div className="headerCell">Purchase</div>
+                    <div className="headerCell">Buy</div>
                 </div>
 
                 {cryptos.map(crypto => (
                     <div className="tableRow" key={crypto.id}>
-                        <div className="tableCell coinCell">
-                            {/* <span className="coinSymbol">{crypto.symbol?.toUpperCase()}</span> */}
-                            <span className="coinName">{crypto.name}</span>
-                        </div>
+                        <div className="tableCell">{crypto.name}</div>
                         <div className="tableCell">${crypto.current_price?.toLocaleString()}</div>
                         <div className="tableCell">${crypto.market_cap?.toLocaleString()}</div>
                         <div className={`tableCell ${crypto.price_change_percentage_24h >= 0 ? 'positive' : 'negative'}`}>{crypto.price_change_percentage_24h?.toFixed(2)}%</div>
