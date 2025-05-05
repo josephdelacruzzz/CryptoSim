@@ -1,5 +1,5 @@
 const express = require('express')
-const router = express.Router();
+const router = express.Router()
 const User = require('../models/User')
 const Portfolio = require('../models/Portfolio')
 const Transaction = require('../models/Transaction')
@@ -7,7 +7,7 @@ const axios = require('axios')
 
 router.post('/buy', async (req, res) => {
     try {
-        const {username, cryptoId, amount } = req.body;
+        const {username, cryptoId, amount } = req.body
         const parsedAmount = parseFloat(amount)
 
         const user = await User.findOne({username})
@@ -19,13 +19,13 @@ router.post('/buy', async (req, res) => {
         const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
 
         const currentPrice = response.data[cryptoId].usd
-        const totalCost = parsedAmount * currentPrice;
+        const totalCost = parsedAmount * currentPrice
         if (user.balance < totalCost) {
             return res.status(400).json({error: "Insufficient funds"})
         }
 
         user.balance -= totalCost
-        await user.save();
+        await user.save()
 
         let portfolioItem = await Portfolio.findOne({userId: user._id, cryptoId})
 
@@ -101,8 +101,8 @@ router.post('/sell', async (req, res) => {
         const currentPrice = priceResponse.data[cryptoId].usd
         const totalValue = amountToSell * currentPrice
 
-        user.balance += totalValue;
-        portfolioItem.amount -= amount;
+        user.balance += totalValue
+        portfolioItem.amount -= amount
         
         if (portfolioItem.amount <= 0) {
             await Portfolio.deleteOne({ _id: portfolioItem._id })
@@ -139,21 +139,21 @@ router.post('/sell', async (req, res) => {
 
 router.get('/history/:username', async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
+        const user = await User.findOne({ username: req.params.username })
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" })
         }
 
         const history = await Transaction.find({ userId: user._id })
                                         .sort({ timestamp: -1 }) 
                                         .select('-userId') 
-                                        // .lean();
+                                        // .lean()
 
-        res.json(history);
+        res.json(history)
     } catch (error) {
-        console.error('Error fetching transaction history:', error);
-        res.status(500).json({ error: "Failed to fetch transaction history", details: error.message });
+        console.error('Error fetching transaction history:', error)
+        res.status(500).json({ error: "Failed to fetch transaction history", details: error.message })
     }
-});
+})
 
-module.exports = router;
+module.exports = router

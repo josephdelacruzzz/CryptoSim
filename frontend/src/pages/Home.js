@@ -1,11 +1,11 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 function Home({loggedInUser, setLoggedInUser}) {
     const [cryptos, setCryptos] = useState([])
-    const [selectedCrypto, setSelectedCrypto] = useState(null);
-    const [amount, setAmount] = useState('');
+    const [selectedCrypto, setSelectedCrypto] = useState(null)
+    const [amount, setAmount] = useState('')
     const [userBalance, setUserBalance] = useState(0)
 
     const navigate = useNavigate()
@@ -25,12 +25,12 @@ function Home({loggedInUser, setLoggedInUser}) {
         try {
             const response = await axios.get(
                 `http://localhost:5001/api/auth/me?username=${loggedInUser.username}`
-            );
-            setUserBalance(response.data.balance || 0);
+            )
+            setUserBalance(response.data.balance || 0)
         } catch (error) {
-            console.error('Error fetching balance:', error);
+            console.error('Error fetching balance:', error)
         }
-    };
+    }
 
 
     const handleBuyClick = (crypto) => {
@@ -38,17 +38,17 @@ function Home({loggedInUser, setLoggedInUser}) {
         if (!loggedInUser) {
           alert('Please login first')
           navigate('/login')
-          return;
+          return
         }
         
         setSelectedCrypto(crypto)
-        setAmount(1);
-    };
+        setAmount(1)
+    }
     
     const confirmPurchase = async () => {
         if (!amount || isNaN(amount)) {
           alert('Please enter a valid amount')
-          return;
+          return
         }
 
         const username = localStorage.getItem('username')
@@ -58,24 +58,24 @@ function Home({loggedInUser, setLoggedInUser}) {
             return
         }
 
-        const totalCost = parseFloat(amount) * selectedCrypto.current_price;
+        const totalCost = parseFloat(amount) * selectedCrypto.current_price
         if (userBalance < totalCost) {
-            alert('Insufficient funds');
-            return;
+            alert('Insufficient funds')
+            return
        }
 
         try {
           await axios.post('http://localhost:5001/api/transactions/buy',
             { username: username, cryptoId: selectedCrypto.id, amount: parseFloat(amount)},
-          );
-          alert(`Successfully purchased ${amount} ${selectedCrypto.name.toUpperCase()}!`);
+          )
+          alert(`Successfully purchased ${amount} ${selectedCrypto.name.toUpperCase()}!`)
           setSelectedCrypto(null)
           setAmount('')
           fetchUserBalance()
         } catch (error) {
-          alert('Purchase failed: ' + (error.response?.data?.error || error.message));
+          alert('Purchase failed: ' + (error.response?.data?.error || error.message))
         }
-    };
+    }
 
     const totalCost = amount && selectedCrypto?.current_price ? parseFloat(amount) * selectedCrypto.current_price : 0
 

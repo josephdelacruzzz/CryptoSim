@@ -15,13 +15,13 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ 
                 error: "Username already exists",
                 debug: `User '${username}' is already taken` 
-            });
+            })
         }
 
         const user = new User({username, password})
 
-        console.log(`Attempting to save user '${username}'...`);
-        await user.save();
+        console.log(`Attempting to save user '${username}'...`)
+        await user.save()
 
 
         console.log(`User '${username}' registered successfully.`)

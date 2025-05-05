@@ -22,20 +22,20 @@ function MyPortfolio({loggedInUser}) {
     useEffect(() => {
         const fetchCurrentPrice = async (cryptoId) => {
             try {
-                const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`);
-                setCurrentPrice(response.data[cryptoId]?.usd || null);
+                const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
+                setCurrentPrice(response.data[cryptoId]?.usd || null)
             } catch (error) {
-                console.error('Error fetching current price:', error);
-                setCurrentPrice(null); 
+                console.error('Error fetching current price:', error)
+                setCurrentPrice(null) 
             }
-        };
+        }
 
         if (selectedCrypto) {
-            fetchCurrentPrice(selectedCrypto.cryptoId);
+            fetchCurrentPrice(selectedCrypto.cryptoId)
         } else {
-            setCurrentPrice(null);
+            setCurrentPrice(null)
         }
-    }, [selectedCrypto]); 
+    }, [selectedCrypto]) 
 
     const fetchPortfolio = async () => {
         try {
@@ -71,12 +71,12 @@ function MyPortfolio({loggedInUser}) {
         }
 
         if (parseFloat(sellAmount) > selectedCrypto.amount) {
-            alert('Amount to sell exceeds available amount');
-            return;
+            alert('Amount to sell exceeds available amount')
+            return
         }
        if (currentPrice === null) {
-            alert('Could not fetch current price. Please try again.');
-            return;
+            alert('Could not fetch current price. Please try again.')
+            return
        }
 
         try {
@@ -94,7 +94,7 @@ function MyPortfolio({loggedInUser}) {
         }
     }
 
-    const potentialReturn = (sellAmount && currentPrice !== null) ? parseFloat(sellAmount) * currentPrice : 0;
+    const potentialReturn = (sellAmount && currentPrice !== null) ? parseFloat(sellAmount) * currentPrice : 0
 
 
     if (!loggedInUser) {
@@ -186,7 +186,7 @@ function MyPortfolio({loggedInUser}) {
                 </div>
             )}
         </div>
-    );
+    )
 }
 
-export default MyPortfolio;
+export default MyPortfolio
