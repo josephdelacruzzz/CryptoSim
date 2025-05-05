@@ -5,7 +5,6 @@ function Nav( {loggedInUser, setLoggedInUser}) {
         localStorage.removeItem('username')
         localStorage.removeItem('userData')
         setLoggedInUser(null)
-        window.location.href = '/'
     }
 
     return (
@@ -26,7 +25,7 @@ function Nav( {loggedInUser, setLoggedInUser}) {
                 ) : (
                     <>
                         <Link to="/myPortfolio">My Portfolio</Link>
-                        <Link to="#" onClick={handleLogout}>Logout</Link>
+                        <Link to="/" onClick={handleLogout}>Logout</Link>
                     </>
                 )}
             </div>

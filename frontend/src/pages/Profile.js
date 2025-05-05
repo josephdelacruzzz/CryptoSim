@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { useAlert } from '../components/Alert'
 
 function Profile() {
     const [username, setUsername] = useState('')
     const [userData, setUserData] = useState(null)
+    const {AlertComponent, showAlert } = useAlert()
 
     const handleSearch = async () => {
         try {
             const response = await axios.get(`http://localhost:5001/api/transactions/${username}`)
             setUserData(response.data)
         } catch (error) {
-            alert('Error fetching user data: ' + (error.response?.data?.error || 'User not found'))
+            showAlert('Error fetching user data: ' + (error.response?.data?.error || 'User not found'))
         }
     }
 
     return (
         <div className="profileContainer">
+        <AlertComponent />
+
             <h1>User Search</h1>
             <div className="searchContainer">
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder = "Enter username"/>
-                <button onClick={handleSearch}>Search</button>
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder = "Enter username"/>
+                    <button onClick={handleSearch}>Search</button>
             </div>
 
             {userData && (

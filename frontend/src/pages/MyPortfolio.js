@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from '../components/Alert'
 import axios from 'axios'
 
 function MyPortfolio({loggedInUser}) {
@@ -10,6 +11,8 @@ function MyPortfolio({loggedInUser}) {
     const [currentPrice, setCurrentPrice] = useState(null)
     const [transactionHistory, setTransactionHistory] = useState([])
     const navigate = useNavigate()
+    const {AlertComponent, showAlert } = useAlert()
+    
 
     useEffect(() => {
         if (!loggedInUser) {
@@ -54,28 +57,30 @@ function MyPortfolio({loggedInUser}) {
            )
            setTransactionHistory(historyRes.data)
         } catch (error) {
-            console.error('Error fetching portfolio:', error)
+            showAlert('Failed to load portfolio data.')
         }
     }
 
     const handleSellClick = (crypto) => {
         setSelectedCrypto(crypto)
         setSellAmount('')
-        setTransactionHistory([])
+        // setTransactionHistory([])
     }
 
     const confirmSell = async () => {
         if (!sellAmount || isNaN(sellAmount) || parseFloat(sellAmount) <= 0) {
-            alert('Please enter a valid amount to sell')
+            showAlert('Please enter a valid amount to sell')
             return
         }
 
         if (parseFloat(sellAmount) > selectedCrypto.amount) {
-            alert('Amount to sell exceeds available amount')
+            setSelectedCrypto(null)
+            showAlert('Amount to sell exceeds available amount')
             return
         }
        if (currentPrice === null) {
-            alert('Could not fetch current price. Please try again.')
+            setSelectedCrypto(null)
+            showAlert('Could not fetch current price. Please try again.')
             return
        }
 
@@ -86,11 +91,12 @@ function MyPortfolio({loggedInUser}) {
                 amount: parseFloat(sellAmount)
             })
             
-            alert(`Successfully sold ${sellAmount} ${selectedCrypto.cryptoId}!`)
             setSelectedCrypto(null)
-            fetchPortfolio() 
+            showAlert(`Successfully sold ${parseFloat(sellAmount).toFixed(4)} ${selectedCrypto.cryptoId.toUpperCase()}!`, () => {
+                fetchPortfolio()
+           })
         } catch (error) {
-            alert('Sale failed: ' + (error.response?.data?.error || error.message))
+            showAlert('Sale failed: ' + (error.response?.data?.error || error.message))
         }
     }
 
@@ -103,6 +109,7 @@ function MyPortfolio({loggedInUser}) {
 
     return (
         <div className="myPortfolioContainer">
+            <AlertComponent />
             <h1>My Portfolio</h1>
             <h2 className="balance">Available Balance (USD): <span>${balance.toFixed(4)}</span></h2>
             

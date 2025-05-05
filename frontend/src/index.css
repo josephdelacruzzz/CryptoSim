@@ -276,6 +276,35 @@ input, button {
   max-width: 500px;
 }
 
+.searchContainer input[type="text"] {
+  padding: 12px; 
+  border-radius: 8px;
+  border: 1px solid rgb(10, 92, 244); 
+  background-color: rgb(10, 92, 244); 
+  color: white;
+  font-weight: bold;
+  flex-grow: 1; 
+  width: auto; 
+}
+
+.searchContainer input[type="text"]::placeholder {
+  color: #000000;
+  opacity: 1; 
+  font-weight: bold;
+}
+
+.searchContainer button {
+  background-color: rgb(10, 92, 244);
+  color: white;
+  border: none; 
+  padding: 12px 20px; 
+  border-radius: 8px; 
+  cursor: pointer;
+  font-size: 16px; 
+  font-weight: bold; 
+
+}
+
 .userPortfolio {
   margin-top: 20px;
 }
@@ -294,7 +323,31 @@ input, button {
 }
 
 .noHistory {
-  color: #aaa;
+  color: #ffffff;
   text-align: center;
   margin-top: 20px;
+}
+
+.alertModalContent {
+  background: #0f55bd; 
+  padding: 30px; 
+  padding-top: 40px; 
+  border-radius: 8px;
+  width: 300px; 
+  max-width: 90%;
+  color: #f8f8f8;
+  font-weight: bold;
+  position: relative; 
+  text-align: left; 
+}
+
+.alertModalContent .alertCloseButton {
+  background: #0f55bd; 
+  position: absolute; 
+  top: 10px; 
+  right: 10px; 
+  border: none; 
+  color: #f8f8f8;
+  font-size: 20px;
+  cursor: pointer;
 }

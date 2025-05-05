@@ -1,12 +1,15 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from '../components/Alert'
 
 function Home({loggedInUser, setLoggedInUser}) {
     const [cryptos, setCryptos] = useState([])
     const [selectedCrypto, setSelectedCrypto] = useState(null)
     const [amount, setAmount] = useState('')
     const [userBalance, setUserBalance] = useState(0)
+    const { AlertComponent, showAlert } = useAlert()
+    
 
     const navigate = useNavigate()
 
@@ -36,8 +39,9 @@ function Home({loggedInUser, setLoggedInUser}) {
     const handleBuyClick = (crypto) => {
 
         if (!loggedInUser) {
-          alert('Please login first')
-          navigate('/login')
+          showAlert('Please login first', () => {
+            navigate('/login')
+          })
           return
         }
         
@@ -47,20 +51,22 @@ function Home({loggedInUser, setLoggedInUser}) {
     
     const confirmPurchase = async () => {
         if (!amount || isNaN(amount)) {
-          alert('Please enter a valid amount')
+          showAlert('Please enter a valid amount')
           return
         }
 
         const username = localStorage.getItem('username')
         if (!username) {
-            alert('Session expired. Please login again.')
-            navigate('/login')
+            showAlert('Session expired. Please login again.', () => {
+                navigate('/login')
+           })
             return
         }
 
         const totalCost = parseFloat(amount) * selectedCrypto.current_price
         if (userBalance < totalCost) {
-            alert('Insufficient funds')
+            setSelectedCrypto(null)
+            showAlert('Insufficient funds')
             return
        }
 
@@ -68,12 +74,13 @@ function Home({loggedInUser, setLoggedInUser}) {
           await axios.post('http://localhost:5001/api/transactions/buy',
             { username: username, cryptoId: selectedCrypto.id, amount: parseFloat(amount)},
           )
-          alert(`Successfully purchased ${amount} ${selectedCrypto.name.toUpperCase()}!`)
           setSelectedCrypto(null)
-          setAmount('')
-          fetchUserBalance()
+          showAlert(`Successfully purchased ${parseFloat(amount).toFixed(4)} ${selectedCrypto.name.toUpperCase()}!`, () => {
+             setAmount('')
+             fetchUserBalance()
+         })
         } catch (error) {
-          alert('Purchase failed: ' + (error.response?.data?.error || error.message))
+          showAlert('Purchase failed: ' + (error.response?.data?.error || error.message))
         }
     }
 
@@ -82,6 +89,7 @@ function Home({loggedInUser, setLoggedInUser}) {
 
     return (
         <div className="homeContainer">
+        <AlertComponent />
 
             {loggedInUser && (
                 <div> 
