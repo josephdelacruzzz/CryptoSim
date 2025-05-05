@@ -2,13 +2,13 @@ const express = require('express')
 const router = express.Router();
 const User = require('../models/User')
 const Portfolio = require('../models/Portfolio')
+const Transaction = require('../models/Transaction')
 const axios = require('axios')
 
 router.post('/buy', async (req, res) => {
     try {
         const {username, cryptoId, amount } = req.body;
-
-        console.log('Purchase attempted by:', username)
+        const parsedAmount = parseFloat(amount)
 
         const user = await User.findOne({username})
         if (!user) {
@@ -19,7 +19,7 @@ router.post('/buy', async (req, res) => {
         const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
 
         const currentPrice = response.data[cryptoId].usd
-        const totalCost = amount * currentPrice;
+        const totalCost = parsedAmount * currentPrice;
         if (user.balance < totalCost) {
             return res.status(400).json({error: "Insufficient funds"})
         }
@@ -39,10 +39,22 @@ router.post('/buy', async (req, res) => {
 
         await portfolioItem.save()
 
+        const newTransaction = new Transaction({
+            userId: user._id,
+            cryptoId: cryptoId,
+            type: 'buy',
+            amount: parsedAmount,
+            price: currentPrice,
+            totalValue: totalCost,
+            timestamp: new Date()
+        })
+
+        await newTransaction.save()
+
         res.json({
             success: true,
             crypto: cryptoId,
-            amountPurchased: amount,
+            amountPurchased: parsedAmount,
             pricePerCoin: currentPrice,
             totalSpent: totalCost,
             newBalance: user.balance
@@ -67,16 +79,13 @@ router.get('/:username', async (req, res) => {
 
 console.log('Sell route registered')
 router.post('/sell', async (req, res) => {
-    console.log("selling")
     try {
         const {username, cryptoId, amount} = req.body
-        console.log("searching for: ", username)
+        const amountToSell = parseFloat(amount)
 
         const user = await User.findOne({username})
-        console.log("user found: ", username)
 
         if (!user) {
-            console.log("user of this name not found: ", username)
             return res.status(400).json({error: "User not found"})
         }
 
@@ -90,7 +99,7 @@ router.post('/sell', async (req, res) => {
 
         const priceResponse = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
         const currentPrice = priceResponse.data[cryptoId].usd
-        const totalValue = amount * currentPrice
+        const totalValue = amountToSell * currentPrice
 
         user.balance += totalValue;
         portfolioItem.amount -= amount;
@@ -103,10 +112,21 @@ router.post('/sell', async (req, res) => {
 
         await user.save()
 
+        const newTransaction = new Transaction({
+            userId: user._id,
+            cryptoId: cryptoId,
+            type: 'sell',
+            amount: amountToSell,
+            price: currentPrice,
+            totalValue: totalValue,
+            timestamp: new Date()
+        })
+        await newTransaction.save()
+
         res.json({
             success: true,
             message: "Sale completed",
-            amountSold: amount,
+            amountSold: amountToSell,
             pricePerCoin: currentPrice,
             totalValue,
             newBalance: user.balance
@@ -116,5 +136,24 @@ router.post('/sell', async (req, res) => {
         res.status(500).json({error: "Sale failed", details: error.message})
     }
 })
+
+router.get('/history/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const history = await Transaction.find({ userId: user._id })
+                                        .sort({ timestamp: -1 }) 
+                                        .select('-userId') 
+                                        // .lean();
+
+        res.json(history);
+    } catch (error) {
+        console.error('Error fetching transaction history:', error);
+        res.status(500).json({ error: "Failed to fetch transaction history", details: error.message });
+    }
+});
 
 module.exports = router;

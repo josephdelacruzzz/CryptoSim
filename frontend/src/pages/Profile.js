@@ -26,7 +26,7 @@ function Profile() {
                 <div className="userPortfolio">
                 <h2>{username}'s Portfolio</h2>
                 {userData.length > 0 ? (
-                    <div className="portfolioTable">
+                    <div className="cryptoTable">
                         <div className="tableHeader">
                             <div className="headerCell">Coin</div>
                             <div className="headerCell">Amount</div>

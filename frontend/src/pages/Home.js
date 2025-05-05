@@ -82,20 +82,18 @@ function Home({loggedInUser, setLoggedInUser}) {
 
     return (
         <div className="homeContainer">
-            <h1 className="marketTitle"> CryptoSim </h1>
 
             {loggedInUser && (
-                <div className="userInfo"> 
-                    <div className="welcome"> Welcome, {loggedInUser.username}</div>
-                    <div className="balance">Available Balance: <span>${userBalance.toFixed(4)}</span></div>
+                <div> 
+                    <div className="welcome"> Welcome, {loggedInUser.username}!</div>
+                    <div className="balance">Available Balance (USD): <span>${userBalance.toFixed(4)}</span></div>
                 </div>
             )}
 
-            {loggedInUser && ( <div> Logged in as: <strong>{loggedInUser.username}</strong></div>)}
             <div className="cryptoTable">
                 <div className="tableHeader">
                     <div className="headerCell">Coin</div>
-                    <div className="headerCell">Price</div>
+                    <div className="headerCell">Price (USD)</div>
                     <div className="headerCell">Market Cap</div>
                     <div className="headerCell">24h Change</div>
                     <div className="headerCell">Buy</div>
