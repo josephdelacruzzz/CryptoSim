@@ -6,5 +6,5 @@ const portfolioSchema = new mongoose.Schema({
     amount: {type: Number, required: true},
     avgBuyPrice: {type: Number, required: true},
     timestamp: {type: Date, default: Date.now}
-});
+})
 module.exports = mongoose.model ('Portfolio', portfolioSchema)

@@ -20,7 +20,7 @@ function Login({setLoggedInUser}) {
                     localStorage.setItem('userData', JSON.stringify(response.data.user))
                     setLoggedInUser(response.data.user)
                     showAlert('Login successful!', () => {
-                        navigate('/');
+                        navigate('/')
                     })
                 } else {
                     showAlert("Login failed: " + (response.data.error || "Unknown error", 'error'))

@@ -14,7 +14,7 @@ function Register() {
         try {
             await axios.post('http://localhost:5001/api/auth/register', {username, password})
             showAlert('Registration successful! Login to continue', () => {
-                navigate('/login');
+                navigate('/login')
             })
         } catch (error) {
             showAlert('Registration failed: ' + (error.response?.data?.error || "Username already exists"))

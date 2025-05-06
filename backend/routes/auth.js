@@ -1,15 +1,15 @@
 const express = require('express')
 const User = require('../models/User')
-const router = express.Router();
+const router = express.Router()
 
 router.post('/register', async (req, res) => {
-    console.log("test");
+    console.log("test")
     console.log(req.body)
     try {
         console.log("test3")
         const {username, password} = req.body
 
-        const existingUser = await User.findOne({username});
+        const existingUser = await User.findOne({username})
         if (existingUser) {
             console.log(`Username ' ${username}' already exists.`)
             return res.status(400).json({ 
@@ -65,4 +65,4 @@ router.post('/login', async (req, res) => {
 
 }
 )
-module.exports = router;
+module.exports = router

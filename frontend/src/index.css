@@ -249,6 +249,8 @@ input, button {
 }
 .auth input::placeholder {
   color: #000000;
+  opacity: 1; 
+  font-weight: bold;
 }
 
 .auth button {

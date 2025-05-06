@@ -22,8 +22,8 @@ function Profile() {
 
             <h1>User Search</h1>
             <div className="searchContainer">
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder = "Enter username"/>
-                    <button onClick={handleSearch}>Search</button>
+                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder = "Enter username"/>
+                <button onClick={handleSearch}>Search</button>
             </div>
 
             {userData && (
