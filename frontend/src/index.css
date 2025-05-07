@@ -42,7 +42,6 @@ input, button {
   display: block;
 }
 
-/* HOME */
 .homeContainer {
   background-color: #0f3460;
   border-radius: 8px;
@@ -75,6 +74,16 @@ input, button {
 
 .buyButton {
   background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.sellButton {
+  background-color: #e53935;
   color: white;
   border: none;
   padding: 8px 15px;
@@ -143,7 +152,6 @@ input, button {
   cursor: pointer; 
 }
 
-/*portfolio*/
 .myPortfolioContainer {
   background-color: #0f3460;
   border-radius: 8px;
@@ -175,7 +183,6 @@ input, button {
   background-color: rgb(3, 42, 158);
   font-weight: bold;
   padding: 12px 15px;
-  /* border-bottom: 1px solid #e0e0e0; */
 }
 
 .headerCell {
@@ -188,7 +195,6 @@ input, button {
   display: flex;
   padding: 15px;
   align-items: center;
-  /* border-bottom: 1px solid #e0e0e0; */
 }
 
 .tableRow:nth-child(even) {
@@ -203,16 +209,6 @@ input, button {
   flex: 1;
   padding: 0 10px;
   text-align: left;
-}
-
-.sellButton {
-  background-color: #e53935;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
 .auth {
@@ -247,6 +243,7 @@ input, button {
   background-color: rgb(10, 92, 244);
   color: white;
 }
+
 .auth input::placeholder {
   color: #000000;
   opacity: 1; 
@@ -304,7 +301,6 @@ input, button {
   cursor: pointer;
   font-size: 16px; 
   font-weight: bold; 
-
 }
 
 .userPortfolio {

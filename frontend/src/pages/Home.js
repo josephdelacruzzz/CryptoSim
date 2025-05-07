@@ -8,9 +8,7 @@ function Home({loggedInUser, setLoggedInUser}) {
     const [selectedCrypto, setSelectedCrypto] = useState(null)
     const [amount, setAmount] = useState('')
     const [userBalance, setUserBalance] = useState(0)
-    const { AlertComponent, showAlert } = useAlert()
-    
-
+    const {AlertComponent, showAlert } = useAlert()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -21,7 +19,7 @@ function Home({loggedInUser, setLoggedInUser}) {
         if (loggedInUser) {
             fetchUserBalance()
         }
-            
+    // eslint-disable-next-line
     }, [loggedInUser])
 
     const fetchUserBalance = async () => {
@@ -37,7 +35,6 @@ function Home({loggedInUser, setLoggedInUser}) {
 
 
     const handleBuyClick = (crypto) => {
-
         if (!loggedInUser) {
           showAlert('Please login first', () => {
             navigate('/login')
@@ -86,11 +83,9 @@ function Home({loggedInUser, setLoggedInUser}) {
 
     const totalCost = amount && selectedCrypto?.current_price ? parseFloat(amount) * selectedCrypto.current_price : 0
 
-
     return (
         <div className="homeContainer">
         <AlertComponent />
-
             {loggedInUser && (
                 <div> 
                     <div className="welcome"> Welcome, {loggedInUser.username}!</div>

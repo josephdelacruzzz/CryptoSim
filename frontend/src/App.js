@@ -7,7 +7,6 @@ import Profile from './pages/Profile'
 import MyPortfolio from './pages/MyPortfolio'
 import Nav from './components/Nav'
 
-
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null)
 

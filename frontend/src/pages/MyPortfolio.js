@@ -12,7 +12,6 @@ function MyPortfolio({loggedInUser}) {
     const [transactionHistory, setTransactionHistory] = useState([])
     const navigate = useNavigate()
     const {AlertComponent, showAlert } = useAlert()
-    
 
     useEffect(() => {
         if (!loggedInUser) {
@@ -20,6 +19,7 @@ function MyPortfolio({loggedInUser}) {
             return
         }
         fetchPortfolio()
+    // eslint-disable-next-line
     }, [loggedInUser, navigate])
 
     useEffect(() => {
@@ -64,7 +64,6 @@ function MyPortfolio({loggedInUser}) {
     const handleSellClick = (crypto) => {
         setSelectedCrypto(crypto)
         setSellAmount('')
-        // setTransactionHistory([])
     }
 
     const confirmSell = async () => {
@@ -90,7 +89,6 @@ function MyPortfolio({loggedInUser}) {
                 cryptoId: selectedCrypto.cryptoId,
                 amount: parseFloat(sellAmount)
             })
-            
             setSelectedCrypto(null)
             showAlert(`Successfully sold ${parseFloat(sellAmount).toFixed(4)} ${selectedCrypto.cryptoId.toUpperCase()}!`, () => {
                 fetchPortfolio()
@@ -99,9 +97,7 @@ function MyPortfolio({loggedInUser}) {
             showAlert('Sale failed: ' + (error.response?.data?.error || error.message))
         }
     }
-
     const potentialReturn = (sellAmount && currentPrice !== null) ? parseFloat(sellAmount) * currentPrice : 0
-
 
     if (!loggedInUser) {
         return null
@@ -112,8 +108,6 @@ function MyPortfolio({loggedInUser}) {
             <AlertComponent />
             <h1>My Portfolio</h1>
             <h2 className="balance">Available Balance (USD): <span>${balance.toFixed(4)}</span></h2>
-            
-
             <div className="holdings">
                 <h3>My Holdings</h3>
                 {portfolio.length > 0 ? (
@@ -137,7 +131,7 @@ function MyPortfolio({loggedInUser}) {
                     ))}
                 </div>
                 ) : (
-                    <p className="noHoldings">No Holdings 🤣😂 </p>
+                    <p className="noHoldings">No Holdings 🤣😂</p>
                 )}
             </div>
 
@@ -171,20 +165,16 @@ function MyPortfolio({loggedInUser}) {
                 )}
             </div>
 
-            {/* Sell Modal */}
             {selectedCrypto && (
                 <div className="modalOverlay">
                     <div className="modalContent">
                         <h3>Sell {selectedCrypto.cryptoId}</h3>
                         <p>Available: {selectedCrypto.amount.toFixed(4)}</p>
-                        
                         <div className="modalInputGroup">
                             <label>Amount to Sell:</label>
                             <input type="number" value={sellAmount} onChange={(e) => setSellAmount(e.target.value)} min="0.00001" max={selectedCrypto.amount} step="0.00001" />
                         </div>
-
                         <p>Potential Return: ${potentialReturn.toFixed(4)}</p>
-                        
                         <div className="modalButtons">
                             <button onClick={confirmSell} className="confirmButton"> Confirm </button>
                             <button onClick={() => setSelectedCrypto(null)} className="cancelButton"> Cancel</button>

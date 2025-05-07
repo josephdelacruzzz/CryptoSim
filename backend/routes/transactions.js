@@ -9,15 +9,13 @@ router.post('/buy', async (req, res) => {
     try {
         const {username, cryptoId, amount } = req.body
         const parsedAmount = parseFloat(amount)
-
         const user = await User.findOne({username})
         if (!user) {
             return res.status(400).json({error: "User not found"})
         }
 
-        console.log(`Fetching price for cryptoId: ${cryptoId}`)
+        // console.log(`Fetching price for cryptoId: ${cryptoId}`)
         const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd`)
-
         const currentPrice = response.data[cryptoId].usd
         const totalCost = parsedAmount * currentPrice
         if (user.balance < totalCost) {
@@ -26,7 +24,6 @@ router.post('/buy', async (req, res) => {
 
         user.balance -= totalCost
         await user.save()
-
         let portfolioItem = await Portfolio.findOne({userId: user._id, cryptoId})
 
         if (portfolioItem) {
@@ -77,12 +74,11 @@ router.get('/:username', async (req, res) => {
     }
 })
 
-console.log('Sell route registered')
+// console.log('Sell route registered')
 router.post('/sell', async (req, res) => {
     try {
         const {username, cryptoId, amount} = req.body
         const amountToSell = parseFloat(amount)
-
         const user = await User.findOne({username})
 
         if (!user) {
@@ -144,14 +140,10 @@ router.get('/history/:username', async (req, res) => {
             return res.status(404).json({ error: "User not found" })
         }
 
-        const history = await Transaction.find({ userId: user._id })
-                                        .sort({ timestamp: -1 }) 
-                                        .select('-userId') 
-                                        // .lean()
-
+        const history = await Transaction.find({ userId: user._id }).sort({ timestamp: -1 }).select('-userId') 
         res.json(history)
     } catch (error) {
-        console.error('Error fetching transaction history:', error)
+        // console.error('Error fetching transaction history:', error)
         res.status(500).json({ error: "Failed to fetch transaction history", details: error.message })
     }
 })

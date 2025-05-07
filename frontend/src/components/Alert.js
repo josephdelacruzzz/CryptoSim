@@ -20,12 +20,12 @@ export function useAlert() {
     alert && (
         <div className="modalOverlay">
             <div className="alertModalContent"> 
-                <button className="alertCloseButton" onClick={closeAlert}>×</button>
+                <button className="alertCloseButton" onClick={closeAlert}>x</button>
                 <div className="alertMessage">{alert.message}</div>
             </div>
         </div>
     )
   )
 
-  return { AlertComponent, showAlert }
+  return {AlertComponent, showAlert}
 }

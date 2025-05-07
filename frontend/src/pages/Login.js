@@ -7,14 +7,14 @@ function Login({setLoggedInUser}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
-    const { AlertComponent, showAlert } = useAlert()
+    const {AlertComponent, showAlert } = useAlert()
 
     const handleSubmit = (e) => {
         e.preventDefault()
         localStorage.clear()
         axios.post('http://localhost:5001/api/auth/login', {username, password})
             .then(response => {
-                console.log('response:', response.data)
+                // console.log('response:', response.data)
                 if (response.data.success) {
                     localStorage.setItem('username', response.data.user.username)
                     localStorage.setItem('userData', JSON.stringify(response.data.user))
@@ -27,7 +27,6 @@ function Login({setLoggedInUser}) {
                 }
             })
             .catch(error => {
-                console.error('why wont this work', error)
                 showAlert("Login failed: " + (error.response?.data?.error || "server error"))
             })
     }
