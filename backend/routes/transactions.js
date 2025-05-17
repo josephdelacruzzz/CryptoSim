@@ -143,7 +143,7 @@ router.get('/history/:username', async (req, res) => {
         const history = await Transaction.find({ userId: user._id }).sort({ timestamp: -1 }).select('-userId') 
         res.json(history)
     } catch (error) {
-        // console.error('Error fetching transaction history:', error)
+        console.error('Error fetching transaction history:', error)
         res.status(500).json({ error: "Failed to fetch transaction history", details: error.message })
     }
 })

@@ -16,12 +16,12 @@ app.use('/api/auth', authRoutes)
 app.use('/api/transactions', transactionRoutes)
 
 app.listen(PORT, () => {
-    // console.log(`Backend server running on http://localhost:${PORT}`)
+    console.log(`Backend server running on http://localhost:${PORT}`)
 })
 
 mongoose.connect(process.env.ATLAS_URI)
-    // .then(() => console.log('MongoDB connected successfully'))
-    // .catch(err => console.error('MongoDB connection error:', err))
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.error('MongoDB connection error:', err))
 
 
 let cryptoCache = null
@@ -49,7 +49,7 @@ app.get('/api/crypto', async (req, res) => {
         lastFetchTime = Date.now()
         res.json(crypto)
     } catch (error) {
-        // console.error('Error receiving data from CoinGecko:', error.message)
+        console.error('Error receiving data from CoinGecko:', error.message)
         res.status(500).json({error: 'Failed to receive data from CoinGecko'})
     }
 })
@@ -78,7 +78,7 @@ app.get('/api/auth/me', async (req,res) => {
             return res.status(404).json({error: "user not found"})
         res.json(user)
     } catch (error) {
-        // console.error('Auth error:', error)
+        console.error('Auth error:', error)
         res.status(500).send("server error")
     }
 })
